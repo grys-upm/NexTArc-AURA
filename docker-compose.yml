@@ -1,0 +1,217 @@
+# =============================================================================
+# AURA Platform PoC — Complete Stack
+# =============================================================================
+
+name: aura
+
+networks:
+  aura-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  mongo-data:
+  minio-data:
+  mosquitto-data:
+  redis-data:
+
+services:
+
+  # ── Infra ──────────────────────────────────────────────────────────────────
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: aura-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-aura}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-aura_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-aura}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports: ["5432:5432"]
+    networks: [aura-net]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-aura}"]
+      interval: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:7
+    container_name: aura-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${POSTGRES_USER:-aura}
+      MONGO_INITDB_ROOT_PASSWORD: ${POSTGRES_PASSWORD:-aura_dev}
+      MONGO_INITDB_DATABASE: aura
+    volumes:
+      - mongo-data:/data/db
+    ports: ["27017:27017"]
+    networks: [aura-net]
+
+  minio:
+    image: minio/minio:latest
+    container_name: aura-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-aura}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-aura_dev}
+    volumes: [minio-data:/data]
+    ports: ["9000:9000", "9001:9001"]
+    networks: [aura-net]
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: aura-mosquitto
+    restart: unless-stopped
+    volumes:
+      - ./infra/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+    ports: ["1883:1883"]
+    networks: [aura-net]
+
+  redis:
+    image: redis:7-alpine
+    container_name: aura-redis
+    restart: unless-stopped
+    ports: ["6379:6379"]
+    networks: [aura-net]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+    volumes:
+      - redis-data:/data
+    command: redis-server --save 60 1  # persist every 60s if 1 key changed
+
+  # ── Servicios ─────────────────────────────────────────────────────────────
+
+  registry-service:
+    build: { context: ., dockerfile: services/registry-service/Dockerfile }
+    container_name: aura-registry-service
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      POSTGRES_DSN: postgresql+asyncpg://${POSTGRES_USER:-aura}:${POSTGRES_PASSWORD:-aura_dev}@postgres:5432/${POSTGRES_DB:-aura}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-aura}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-aura_dev}
+      MINIO_SECURE: "false"
+      MINIO_BUCKET_MODELS: ${MINIO_BUCKET_MODELS:-models}
+      MINIO_BUCKET_COMPILED: ${MINIO_BUCKET_COMPILED:-compiled}
+      MINIO_BUCKET_DATASETS: ${MINIO_BUCKET_DATASETS:-datasets}
+      MINIO_BUCKET_BASE_MODELS: ${MINIO_BUCKET_BASE_MODELS:-base-models}
+      MINIO_BUCKET_SCRIPTS: ${MINIO_BUCKET_SCRIPTS:-scripts}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports: ["50051:50051"]
+    networks: [aura-net]
+    volumes: [./services/registry-service/app:/app/app, ./shared:/app/shared]
+
+  mlops-service:
+    build: { context: ., dockerfile: services/mlops-service/Dockerfile }
+    container_name: aura-mlops-service
+    restart: unless-stopped
+    depends_on:
+      redis: { condition: service_healthy }
+    environment:
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-aura}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-aura_dev}
+      MINIO_SECURE: "false"
+      AI_SERVICE_GRPC: registry-service:50051
+      REDIS_URL: redis://redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports: ["50052:50052"]
+    networks: [aura-net]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ./services/mlops-service/app:/app/app
+      - ./shared:/app/shared
+      - ./hardware:/app/hardware
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  edge-connector-service:
+    build: { context: ., dockerfile: services/edge-connector-service/Dockerfile }
+    container_name: aura-edge-connector-service
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+      mongodb: { condition: service_started }
+      mosquitto: { condition: service_started }
+      redis: { condition: service_healthy }
+    environment:
+      POSTGRES_DSN: postgresql+asyncpg://${POSTGRES_USER:-aura}:${POSTGRES_PASSWORD:-aura_dev}@postgres:5432/${POSTGRES_DB:-aura}
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-aura}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-aura_dev}
+      MINIO_SECURE: "false"
+      MINIO_BUCKET_COMPILED: ${MINIO_BUCKET_COMPILED:-compiled}
+      MINIO_BUCKET_SCRIPTS: ${MINIO_BUCKET_SCRIPTS:-scripts}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-http://localhost:9010}
+      MONGO_URI: mongodb://${POSTGRES_USER:-aura}:${POSTGRES_PASSWORD:-aura_dev}@mongodb:27017/aura?authSource=admin
+      MONGO_DB: aura
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      PROMETHEUS_PORT: 9100
+      AI_SERVICE_GRPC: registry-service:50051
+      SCRIPT_SERVICE_GRPC: registry-service:50051
+      COMPILATION_SERVICE_GRPC: mlops-service:50052
+      REDIS_URL: redis://redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports: ["50053:50053", "9100:9100"]
+    networks: [aura-net]
+    volumes: [./services/edge-connector-service/app:/app/app, ./shared:/app/shared, ./hardware:/app/hardware]
+
+  api-gateway:
+    build: { context: ., dockerfile: services/api-gateway/Dockerfile }
+    container_name: aura-api-gateway
+    restart: unless-stopped
+    depends_on:
+      - registry-service
+      - mlops-service
+      - edge-connector-service
+      - redis
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-dev-insecure-change-me}
+      DEVICE_SERVICE_GRPC: registry-service:50051
+      AI_SERVICE_GRPC: registry-service:50051
+      SCRIPT_SERVICE_GRPC: registry-service:50051
+      COMPILATION_SERVICE_GRPC: mlops-service:50052
+      DEPLOYMENT_SERVICE_GRPC: edge-connector-service:50053
+      MONITORING_SERVICE_GRPC: edge-connector-service:50053
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-aura}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-aura_dev}
+      MINIO_SECURE: "false"
+      MINIO_BUCKET_DATASETS: ${MINIO_BUCKET_DATASETS:-datasets}
+      MINIO_BUCKET_BASE_MODELS: ${MINIO_BUCKET_BASE_MODELS:-base-models}
+      MINIO_PUBLIC_URL: ${MINIO_PUBLIC_URL:-http://localhost:9010}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports: ["8000:8000"]
+    networks: [aura-net]
+    volumes: [./services/api-gateway/app:/app/app, ./shared:/app/shared, ./hardware:/app/hardware]
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: aura-frontend
+    restart: unless-stopped
+    depends_on:
+      - api-gateway
+    environment:
+      NEXT_PUBLIC_API_URL: http://api-gateway:8000
+    ports:
+      - "3000:3000"
+    networks: [aura-net]

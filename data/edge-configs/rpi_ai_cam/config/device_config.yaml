@@ -1,0 +1,13 @@
+coordinates:
+- -3.6294
+- 40.3897
+device_id: dev-device-001
+hardware_type: rpi_ai_cam
+inference_interval_s: 0.1
+log_level: INFO
+mqtt_host: localhost
+mqtt_port: 1883
+mqtt_reconnect_interval_s: 5
+primary_camera_id: camera_0
+telemetry_interval_s: 10.0
+work_dir: \tmp\aura

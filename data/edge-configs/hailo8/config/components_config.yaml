@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AURA Edge Runtime — Components Configuration (Hailo-8 Accelerator)
+# ─────────────────────────────────────────────────────────────────────────────
+# Describes the physical/virtual components attached to this edge device.
+#
+# Each component has:
+#   id       — unique identifier used in telemetry and local_state
+#   type     — device category: camera | sensor | gpio
+#   driver   — backend driver to use (opencv | libcamera | imx500)
+#   enabled  — whether the DeviceManager should activate this component
+#   params   — driver-specific parameters
+
+components:
+
+  # ── Primary camera ─────────────────────────────────────────────────────────
+  # Hailo-8 target uses the generic OpenCV backend by default (USB webcam, RTSP,
+  # or local file). For a native Raspberry Pi CSI camera module, you can
+  # uncomment and use the "libcamera" driver instead.
+  - id: camera_0
+    type: camera
+    driver: opencv
+    enabled: true
+    params:
+      source: 0               # int device index, or RTSP/file URI string
+      resolution: [640, 480]
+      fps: 10
+
+  # ── Environmental sensor — BME280 via I2C ──────────────────────────────────
+  - id: env_sensor_0
+    type: sensor
+    driver: bme280
+    enabled: false
+    params:
+      bus: 1                     # I2C bus number (1 on RPi 3/4/5)
+      address: "0x76"            # 0x76 (SDO→GND) or 0x77 (SDO→VCC)
+      measurements: [temperature, humidity, pressure]
+
+  # ── Simulated GPS sensor ───────────────────────────────────────────────────
+  - id: gps_0
+    type: gps
+    driver: gps_simulated
+    enabled: true

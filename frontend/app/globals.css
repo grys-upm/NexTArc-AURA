@@ -1,0 +1,323 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased;
+  }
+}
+
+/* =============================================
+   DESIGN SYSTEM — AURA Platform Light Mode
+   
+   Palette:
+   --bg-base:      #f5f6f8   main surface, very cold and muted gray
+   --bg-surface:   #ffffff   cards and panels
+   --bg-raised:    #eef0f3   hover / inputs
+   --border:       #d8dce4   standard borders (darker than before)
+   --border-soft:  #e4e7ed   internal separators
+   --text-primary: #0f1117   primary text — almost black, not pure black
+   --text-muted:   #6b7280   secondary text
+   --text-subtle:  #9ca3af   labels, placeholders
+   --accent:       #2563eb   blue 600 — modern pure accent
+   --accent-dim:   #1d4ed8   accent hover
+   --sidebar-bg:   #0f1117   same as dark mode — black sidebar
+   --topbar-bg:    #0f1117   black topbar too
+   ============================================= */
+
+/* --- Body --- */
+:root:not(.dark) body {
+  background-color: #f5f6f8 !important;
+  color: #0f1117 !important;
+}
+
+/* --- Dot grid: barely visible, cold gray dots --- */
+.dot-grid {
+  background-image: radial-gradient(#c8cdd6 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+:root:not(.dark) .dot-grid {
+  background-image: radial-gradient(#c8cdd6 1px, transparent 1px) !important;
+  background-size: 24px 24px !important;
+}
+
+.dark .dot-grid {
+  background-image: radial-gradient(#1e2535 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* --- Cards and panels --- */
+:root:not(.dark) .bg-white\/60,
+:root:not(.dark) .bg-white\/40,
+:root:not(.dark) .bg-white\/80,
+:root:not(.dark) .bg-white\/50 {
+  background-color: rgba(255, 255, 255, 0.90) !important;
+  border-color: #d8dce4 !important;
+  box-shadow:
+    0 1px 2px rgba(15, 17, 23, 0.04),
+    0 4px 12px rgba(15, 17, 23, 0.06) !important;
+  backdrop-filter: blur(12px);
+}
+
+:root:not(.dark) .bg-white {
+  background-color: #ffffff !important;
+}
+
+:root:not(.dark) .bg-gray-50,
+:root:not(.dark) .hover\:bg-gray-50:hover {
+  background-color: #eef0f3 !important;
+}
+
+/* --- Borders --- */
+:root:not(.dark) .border,
+:root:not(.dark) .border-slate-200\/60,
+:root:not(.dark) .border-gray-200,
+:root:not(.dark) .border-slate-200,
+:root:not(.dark) .border-slate-300,
+:root:not(.dark) .border-r,
+:root:not(.dark) .border-t,
+:root:not(.dark) .border-l {
+  border-color: #d8dce4 !important;
+}
+
+:root:not(.dark) .border-b {
+  border-color: #e4e7ed !important;
+}
+
+:root:not(.dark) .border-gray-100 {
+  border-color: #e4e7ed !important;
+}
+
+:root:not(.dark) .border-gray-300 {
+  border-color: #c8cdd6 !important;
+}
+
+/* =============================================
+   SIDEBAR — Dark UPM Blue
+   ============================================= */
+:root:not(.dark) aside {
+  background-color: #002570 !important;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, #002570 0%, #001748 100%) !important;
+  background-size: 16px 16px, 100% 100% !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 6px 0 30px rgba(0, 0, 0, 0.22) !important;
+}
+
+/* Make sidebar lines white in light mode */
+:root:not(.dark) aside .border-b,
+:root:not(.dark) aside .border-t {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Active item (using dark mode colors for background and border) */
+:root:not(.dark) aside .absolute.inset-0 {
+  background-color: rgba(31, 41, 55, 0.6) !important;
+  border-color: rgba(55, 65, 81, 0.5) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Sidebar header "AURA" and "PLATFORM" in white as requested */
+:root:not(.dark) aside p.text-slate-800 {
+  color: #ffffff !important;
+}
+:root:not(.dark) aside p.text-gray-500 {
+  color: #ffffff !important;
+}
+
+/* Inactive items styling matching dark mode colors */
+:root:not(.dark) aside a.text-gray-500 {
+  color: #9ca3af !important;
+}
+:root:not(.dark) aside a.text-gray-500:hover {
+  background-color: rgba(31, 41, 55, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* Make sure hovered icons inside inactive items turn white/light gray */
+:root:not(.dark) aside a.text-gray-500:hover .group-hover\:text-gray-700 {
+  color: #d1d5db !important;
+}
+
+/* Active items text in white */
+:root:not(.dark) aside a.text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Inactive icon color (default state) */
+:root:not(.dark) aside a:not(.text-gray-900) svg {
+  color: #9ca3af;
+}
+
+/* Collapsed logo button / expand/collapse handles */
+:root:not(.dark) aside button {
+  background-color: transparent !important;
+  color: #9ca3af !important;
+}
+:root:not(.dark) aside button:hover {
+  background-color: rgba(31, 41, 55, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* Ensure no background appears on the collapsed logo button in any state */
+:root:not(.dark) aside button.logo-collapsed-btn,
+:root:not(.dark) aside button.logo-collapsed-btn:hover,
+:root:not(.dark) aside button.logo-collapsed-btn:focus,
+:root:not(.dark) aside button.logo-collapsed-btn:active,
+:root:not(.dark) aside button.logo-collapsed-btn * {
+  background-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* PanelLeftClose and PanelLeftOpen button hover states */
+:root:not(.dark) aside button.text-gray-400:hover {
+  color: #ffffff !important;
+}
+
+/* Logout button (same colors as dark mode: text-gray-400 hover:text-red-400 hover:bg-red-900/10) */
+:root:not(.dark) aside button.text-gray-500 {
+  color: #9ca3af !important;
+}
+:root:not(.dark) aside button.text-gray-500:hover {
+  background-color: rgba(239, 68, 68, 0.18) !important;
+  color: #fca5a5 !important;
+}
+
+/* Side expansion handle */
+:root:not(.dark) aside .bg-blue-500\/50 {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Sidebar tooltips */
+:root:not(.dark) aside .bg-gray-900 {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+/* =============================================
+   TOPBAR — Dark UPM Blue, same as sidebar
+   ============================================= */
+:root:not(.dark) header {
+  background-color: #002570 !important;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, #002570 0%, #001748 100%) !important;
+  background-size: 16px 16px, 100% 100% !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Topbar title and text - white as requested */
+:root:not(.dark) header h1.text-gray-900 {
+  color: #ffffff !important;
+}
+
+/* Gray-blue subtexts */
+:root:not(.dark) header .text-gray-600,
+:root:not(.dark) header .text-gray-500,
+:root:not(.dark) header .text-gray-400 {
+  color: #a8c4e0 !important;
+}
+
+/* "Connected" badge */
+:root:not(.dark) header .bg-gray-50\/80,
+:root:not(.dark) .bg-gray-50\/80 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #a8c4e0 !important;
+}
+
+/* Theme toggle button and its SVG icon */
+:root:not(.dark) header button {
+  background-color: transparent !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: #a8c4e0 !important;
+}
+:root:not(.dark) header button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+:root:not(.dark) header button svg.text-gray-700 {
+  color: #a8c4e0 !important;
+}
+:root:not(.dark) header button:hover svg.text-gray-700 {
+  color: #ffffff !important;
+}
+
+/* =============================================
+   SECONDARY BUTTONS
+   ============================================= */
+:root:not(.dark) .bg-gray-100 {
+  background-color: #eef0f3 !important;
+  border-color: #d8dce4 !important;
+  color: #374151 !important;
+}
+
+:root:not(.dark) .bg-gray-100:hover {
+  background-color: #e4e7ed !important;
+  color: #111827 !important;
+}
+
+:root:not(.dark) button.border-gray-300:hover {
+  background-color: #eef0f3 !important;
+}
+
+/* =============================================
+   TYPOGRAPHY
+   ============================================= */
+:root:not(.dark) .text-slate-800,
+:root:not(.dark) .text-gray-900 {
+  color: #0f1117 !important;
+}
+
+:root:not(.dark) .text-slate-500,
+:root:not(.dark) .text-gray-500 {
+  color: #6b7280 !important;
+}
+
+:root:not(.dark) .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+:root:not(.dark) .text-gray-600 {
+  color: #374151 !important;
+}
+
+/* =============================================
+   INPUTS
+   ============================================= */
+:root:not(.dark) input,
+:root:not(.dark) select,
+:root:not(.dark) textarea {
+  background-color: #ffffff !important;
+  border-color: #d8dce4 !important;
+  color: #0f1117 !important;
+}
+
+:root:not(.dark) input:focus,
+:root:not(.dark) select:focus,
+:root:not(.dark) textarea:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+}
+
+/* =============================================
+   SCROLLBAR
+   ============================================= */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* =============================================
+   TACTICAL MAP
+   ============================================= */
+.dark-tactical-tiles {
+  filter: invert(100%) hue-rotate(180deg) saturate(350%) brightness(110%) contrast(95%);
+}

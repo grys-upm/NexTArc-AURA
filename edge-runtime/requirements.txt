@@ -1,0 +1,11 @@
+# ── PAL core dependencies ────────────────────────────────────────────────────
+# These are the only packages needed for the edge-runtime PAL layer.
+# Hardware-specific libraries (inference, cameras, sensors, actuators) are
+# downloaded dynamically via OTA when the device connects to the AURA platform.
+
+aiomqtt==2.3.0
+httpx==0.27.2
+numpy
+psutil==6.0.0
+pyyaml>=6.0
+onnxruntime>=1.16.0

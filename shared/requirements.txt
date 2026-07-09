@@ -1,0 +1,9 @@
+grpcio==1.67.1
+grpcio-reflection==1.67.1
+grpcio-tools==1.67.1
+sqlalchemy[asyncio]==2.0.35
+asyncpg==0.29.0
+miniopy-async==1.20.0
+aiomqtt==2.3.0
+pydantic==2.8.2
+pydantic-settings==2.4.0

@@ -1,0 +1,312 @@
+============================================================
+AURA PLATFORM VERIFICATION TEST SUITE RUNNER
+============================================================
+Project root: C:\Users\Estela\TFM_MIoT
+Target images directory: C:\Users\Estela\TFM_MIoT\docs\images
+[OK] Successfully connected to PostgreSQL database (Live Mode).
+[OK] Successfully connected to MongoDB database (Live Mode).
+Suite Ingress State: DATABASE DYNAMIC MODE
+============================================================
+[1/9] Running Compilation and Training Test...
+      [Live Query] Successfully extracted dynamic compilation statistics from PostgreSQL.
+      -> Saved: test_compilation.png
+
+      [Database Table] MODEL COMPILATION PERFORMANCE (NON-FUNCTIONAL)
+      +-------+-----------------+--------+------------------+-------------------+
+      | Model | Hardware Target | Status | Compile Dur. (s) | Pipeline Dur. (s) |
+      +-------+-----------------+--------+------------------+-------------------+
+      | D     | Hailo-8         | ready  | 513.0125         | 636.0125          |
+      | D     | Hailo-8L        | ready  | 399.9550         | 492.2050          |
+      | D     | RPi5 (CPU)      | ready  | 10.6600          | 26.0350           |
+      | D     | RPi AI Camera   | ready  | 1230.8200        | 1384.5700         |
+      | F     | Hailo-8         | ready  | 487.9875         | 604.9875          |
+      | F     | Hailo-8L        | ready  | 380.4450         | 468.1950          |
+      | F     | RPi5 (CPU)      | ready  | 10.1400          | 24.7650           |
+      | F     | RPi AI Camera   | ready  | 1170.7800        | 1317.0300         |
+      +-------+-----------------+--------+------------------+-------------------+
+
+[2/9] Running API Gateway Upload Test...
+      [Live HTTP Request] Authenticating with API Gateway demo credentials...
+      [Live HTTP Request] Uploading script camera_infer.py...
+         - SUCCESS: Script camera_infer.py uploaded in 0.0669 seconds.
+      [Live HTTP Request] Uploading script child_object_detection.py...
+         - SUCCESS: Script child_object_detection.py uploaded in 0.0547 seconds.
+      [Live HTTP Request] Uploading dataset drowsiness_dataset.zip...
+         - SUCCESS: Dataset drowsiness_dataset.zip uploaded in 24.4024 seconds.
+      [Live HTTP Request] Uploading dataset forgotten_dataset.zip...
+         - SUCCESS: Dataset forgotten_dataset.zip uploaded in 21.9863 seconds.
+      [Live HTTP Request] Uploading model drowsiness_v8.pt...
+         - SUCCESS: Model drowsiness_v8.pt uploaded in 0.4039 seconds.
+      [Live HTTP Request] Uploading model forgotten_v8.pt...
+         - SUCCESS: Model forgotten_v8.pt uploaded in 0.1746 seconds.
+      [Live HTTP Request] Cleaning up uploaded test resources...
+         - SUCCESS: Model drowsiness_v8.pt deleted.
+         - SUCCESS: Model forgotten_v8.pt deleted.
+         - SUCCESS: Dataset drowsiness_dataset.zip deleted.
+         - SUCCESS: Dataset forgotten_dataset.zip deleted.
+         - SUCCESS: Script camera_infer.py deleted.
+         - SUCCESS: Script child_object_detection.py deleted.
+      [Live Query] Total datasets registered: 5 (Total size: 6447.28 MB)
+      -> Saved: test_uploads.png
+
+      [Database Table] API GATEWAY UPLOAD BENCHMARKS (NON-FUNCTIONAL)
+      +------------+---------------------------+-----------+-----------------+------------------+
+      | Asset Type | Asset Name                | File Size | Upload Duration | Throughput Speed |
+      +------------+---------------------------+-----------+-----------------+------------------+
+      | Script     | camera_infer.py           | 5.21 KB   | 0.07 s          | 0.076 MB/s       |
+      | Script     | child_object_detection.py | 5.85 KB   | 0.05 s          | 0.104 MB/s       |
+      | Dataset    | drowsiness_dataset.zip    | 2.16 GB   | 24.40 s         | 90.686 MB/s      |
+      | Dataset    | forgotten_dataset.zip     | 1.97 GB   | 21.99 s         | 91.938 MB/s      |
+      | Model      | drowsiness_v8.pt          | 5.94 MB   | 0.40 s          | 14.711 MB/s      |
+      | Model      | forgotten_v8.pt           | 5.94 MB   | 0.17 s          | 34.030 MB/s      |
+      +------------+---------------------------+-----------+-----------------+------------------+
+
+[3/9] Running Inference Test...
+      [Live Query] Total real-time inferences recorded in MongoDB: 58676 records
+      [LOG] Balancing inference results to 5661 ticks per architecture.
+      [LOG] Balancing inference telemetry datasets to 149 messages per architecture.
+      [Live Query] Successfully updated live inference latency and FPS from MongoDB.
+      -> Saved: test_inference.png
+
+      [Database Table] EDGE INFERENCE LATENCY AND THROUGHPUT (NON-FUNCTIONAL)
+      +-----------------+-------+------------------+---------+----------+
+      | Hardware Target | Ticks | Avg Latency (ms) | Avg FPS | Peak FPS |
+      +-----------------+-------+------------------+---------+----------+
+      | RPi5 (CPU)      | 5661  | 194.51           | 5.1     | 6.4      |
+      | Hailo-8         | 5661  | 13.56            | 73.7    | 81.0     |
+      | Hailo-8L        | 5661  | 15.49            | 64.6    | 66.5     |
+      | RPi AI Camera   | 5661  | 1.78             | 562.0   | 970.9    |
+      +-----------------+-------+------------------+---------+----------+
+
+[4/9] Running Telemetry Ingestion Test...
+      [LOG] Balancing telemetry history to 175 messages per architecture.
+
+      [Database Table] MONGODB BALANCED TELEMETRY_HISTORY (Latest 10 of 175 per architecture)
+      +--------------------------------------+----------------------------------+-------------+-------------+-------------+------------+---------+
+      | device_id                            | timestamp                        | cpu_percent | ram_percent | ram_used_mb | latency_ms | status  |
+      +--------------------------------------+----------------------------------+-------------+-------------+-------------+------------+---------+
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-09T13:04:52.657260+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-09T12:33:48.371040+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-09T09:03:28.511484+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-09T08:27:44.753956+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-08T20:18:45.299985+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-08T20:18:37.633476+00:00 | 3.6         | 15.7        | 1141.7      | 0.0        | online  |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-08T20:18:27.776205+00:00 | 2.2         | 16.1        | 1171.4      | 0.0        | online  |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-08T20:18:17.675630+00:00 | 2.9         | 16.1        | 1175.1      | 0.0        | online  |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-08T20:18:07.539659+00:00 | 1.9         | 15.9        | 1155.9      | 0.0        | online  |
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | 2026-07-08T20:17:57.539561+00:00 | 6.8         | 15.8        | 1152.1      | 0.0        | online  |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-09T13:04:52.727514+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-09T12:33:48.424184+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-09T09:03:28.560501+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-09T08:27:44.796736+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-08T20:47:00.227210+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-08T20:46:50.216798+00:00 | 6.0         | 16.5        | 1192.7      | 12.49      | online  |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-08T20:46:40.233076+00:00 | 6.8         | 16.5        | 1196.2      | 13.85      | online  |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-08T20:46:30.199290+00:00 | 6.4         | 16.5        | 1195.7      | 13.03      | online  |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-08T20:46:20.151512+00:00 | 6.8         | 16.5        | 1192.4      | 14.0       | online  |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | 2026-07-08T20:46:10.136816+00:00 | 6.6         | 16.5        | 1193.0      | 13.81      | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-09T13:04:52.759419+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-09T12:33:48.452720+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-09T09:03:28.586558+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-09T08:27:44.817473+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-08T21:29:43.979314+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-08T21:29:41.395998+00:00 | 3.8         | 7.5         | 491.3       | 15.46      | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-08T21:29:31.379062+00:00 | 3.6         | 7.5         | 491.6       | 15.3       | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-08T21:29:21.294117+00:00 | 3.9         | 7.5         | 487.5       | 15.51      | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-08T21:29:11.346656+00:00 | 3.8         | 7.5         | 488.9       | 15.61      | online  |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | 2026-07-08T21:29:01.307243+00:00 | 3.7         | 7.5         | 488.9       | 15.48      | online  |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-09T13:04:52.709165+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-09T12:33:48.405739+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-09T09:03:28.546314+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-09T08:27:44.784217+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-08T20:16:03.040412+00:00 | 0.0         | 0.0         | 0.0         | 0.0        | offline |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-08T20:16:02.268748+00:00 | 4.6         | 16.8        | 1227.6      | 1.81       | online  |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-08T20:15:52.218728+00:00 | 5.6         | 16.7        | 1225.0      | 2.0        | online  |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-08T20:15:42.191411+00:00 | 5.5         | 16.8        | 1228.8      | 1.84       | online  |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-08T20:15:32.213972+00:00 | 5.0         | 16.7        | 1226.0      | 2.07       | online  |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | 2026-07-08T20:15:22.193082+00:00 | 4.4         | 16.7        | 1225.3      | 1.82       | online  |
+      +--------------------------------------+----------------------------------+-------------+-------------+-------------+------------+---------+
+
+      -> Saved: test_telemetry.png
+[5/9] Running MQTT Communication Test...
+      [Live Query] Dynamic packet summary: 1030 Telemetries | 58676 Inferences | 12 Deployments
+      -> Saved: test_mqtt.png
+[6/9] Running gRPC Integration Test...
+      [LOG] Testing gRPC endpoint localhost:50051 (Registry) connection...
+      [LOG] SUCCESS: Connected to Registry service at localhost:50051. Endpoint is UP and READY.
+      [LOG] Testing gRPC endpoint localhost:50052 (MLOps) connection...
+      [LOG] SUCCESS: Connected to MLOps service at localhost:50052. Endpoint is UP and READY.
+      [LOG] Testing gRPC endpoint localhost:50053 (Connector) connection...
+      [LOG] SUCCESS: Connected to Connector service at localhost:50053. Endpoint is UP and READY.
+
+      [LOG] Fetching Deployment execution logs from PostgreSQL...
+
+      [Database Table] POSTGRESQL LATEST DEPLOYMENTS
+      +--------------------------------------+-------+---------+---------------------+---------------------+---------------+
+      | ID                                   | Name  | Status  | Sent At             | Running At          | Error Message |
+      +--------------------------------------+-------+---------+---------------------+---------------------+---------------+
+      | 98591b89-d136-4987-826b-1b91db03abdb | D All | sent    | 2026-07-09 12:02:21 |                     |               |
+      | e1190a70-02e5-4005-8034-76821b1a9936 | D All | sent    | 2026-07-09 12:02:21 |                     |               |
+      | 6c47d2c5-e263-4239-b4c5-5497ddc9e340 | D All | sent    | 2026-07-09 12:02:21 |                     |               |
+      | c6699dd3-0f41-4df7-941a-d9aad3f67c43 | D All | sent    | 2026-07-09 12:02:21 |                     |               |
+      | 7b3aeb66-e4fb-4f1e-9115-3abb6bbe57c8 | D     | running | 2026-07-08 21:17:43 | 2026-07-08 21:17:45 |               |
+      +--------------------------------------+-------+---------+---------------------+---------------------+---------------+
+
+[7/9] Running Registry Integration Test...
+
+      [Database Table] POSTGRES TABLE: DATASETS
+      +--------------------------------------+-------------------------+--------------------------------------+--------------------------------------+--------------------------------------+------------+--------------------------------------+----------------------------------+
+      | id                                   | name                    | description                          | object_key                           | sha256                               | size_bytes | meta_info                            | created_at                       |
+      +--------------------------------------+-------------------------+--------------------------------------+--------------------------------------+--------------------------------------+------------+--------------------------------------+----------------------------------+
+      | 4e90fcb6-997a-4055-be5f-01a03d27fa71 | D                       |                                      | 4e90fcb6-997a-4055-be5f-01a03d27f... | c30200fcdbb822b44551e7efe5c46f913... | 2320445728 | {'num_classes': 8, 'class_names':... | 2026-07-08T18:37:53.407746+00:00 |
+      | 78d69a8e-b6a8-4f16-805f-0301303b439e | F                       |                                      | 78d69a8e-b6a8-4f16-805f-0301303b4... | 123763c72451e6a0d221292f356e5b7dc... | 2119571495 | {'num_classes': 4, 'class_names':... | 2026-07-08T18:38:51.016740+00:00 |
+      | 70709058-33cd-4816-9d47-d882f15031b2 | Live_drowsiness_dataset | Dataset uploaded during automated... | 70709058-33cd-4816-9d47-d882f1503... | c30200fcdbb822b44551e7efe5c46f913... | 2320445728 | {'num_classes': 8, 'class_names':... | 2026-07-09T12:25:29.023181+00:00 |
+      | 50b55c34-6302-4598-8724-3f20cb668f64 | Live_forgotten_dataset  | Dataset uploaded during automated... |                                      |                                      |            |                                      | 2026-07-09T12:26:10.048318+00:00 |
+      | 3f4bf0f7-6114-4bf4-98df-983f5bd3b6b9 | Live_drowsiness_dataset | Dataset uploaded during automated... |                                      |                                      |            |                                      | 2026-07-09T08:55:19.634365+00:00 |
+      +--------------------------------------+-------------------------+--------------------------------------+--------------------------------------+--------------------------------------+------------+--------------------------------------+----------------------------------+
+
+
+      [Database Table] POSTGRES TABLE: DATASET_VERSIONS
+      +--------------------------------------+--------------------------------------+---------+--------------------------+--------------------------------------+--------------------------------------+------------+--------------------------------------+----------------------------------+
+      | id                                   | dataset_id                           | version | description              | object_key                           | sha256                               | size_bytes | meta_info                            | created_at                       |
+      +--------------------------------------+--------------------------------------+---------+--------------------------+--------------------------------------+--------------------------------------+------------+--------------------------------------+----------------------------------+
+      | 87986e12-a2e7-4747-ae6d-45e52744eef9 | 4e90fcb6-997a-4055-be5f-01a03d27fa71 | v1      |                          | 4e90fcb6-997a-4055-be5f-01a03d27f... | c30200fcdbb822b44551e7efe5c46f913... | 2320445728 | {'num_classes': 8, 'class_names':... | 2026-07-08T18:38:11.487257+00:00 |
+      | 50d2442c-838e-49f5-aadf-275524fa57e7 | 78d69a8e-b6a8-4f16-805f-0301303b439e | v1      |                          | 78d69a8e-b6a8-4f16-805f-0301303b4... | 123763c72451e6a0d221292f356e5b7dc... | 2119571495 | {'num_classes': 4, 'class_names':... | 2026-07-08T18:39:11.566087+00:00 |
+      | 55c7e141-14c4-4164-b0fe-1e647fd2ea23 | 70709058-33cd-4816-9d47-d882f15031b2 | 1.0     | Auto verification upload | 70709058-33cd-4816-9d47-d882f1503... | c30200fcdbb822b44551e7efe5c46f913... | 2320445728 | {'num_classes': 8, 'class_names':... | 2026-07-09T12:25:52.883889+00:00 |
+      +--------------------------------------+--------------------------------------+---------+--------------------------+--------------------------------------+--------------------------------------+------------+--------------------------------------+----------------------------------+
+
+
+      [Database Table] POSTGRES TABLE: DEVICES
+      +--------------------------------------+--------------------+---------------+-------------+---------+----------------------------------+--------+----------------------------------+--------------------------------------+-----------+
+      | id                                   | name               | hardware_type | description | status  | last_seen_at                     | others | created_at                       | sensors                              | actuators |
+      +--------------------------------------+--------------------+---------------+-------------+---------+----------------------------------+--------+----------------------------------+--------------------------------------+-----------+
+      | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | IoT-Edge-Device-01 | rpi           |             | offline | 2026-07-09T13:04:52.675124+00:00 | []     | 2026-07-08T18:40:52.466978+00:00 | ['camera/rpi_camera_module_3', 'g... | []        |
+      | 352c0572-c8c9-4678-9181-1c995033f2d3 | IoT-Edge-Device-04 | rpi_ai_cam    |             | offline | 2026-07-09T13:04:52.720837+00:00 | []     | 2026-07-08T19:15:24.177230+00:00 | ['camera/imx500', 'gps/gps_simula... | []        |
+      | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | IoT-Edge-Device-02 | hailo8        |             | offline | 2026-07-09T13:04:52.738567+00:00 | []     | 2026-07-08T20:16:34.838385+00:00 | ['camera/rpi_camera_module_3', 'g... | []        |
+      | e09819b7-b7bf-4724-9a21-56811a844308 | IoT-Edge-Device-03 | hailo8l       |             | online  | 2026-07-09T13:04:52.769374+00:00 | []     | 2026-07-08T20:50:05.294740+00:00 | ['camera/rpi_camera_module_3', 'g... | []        |
+      +--------------------------------------+--------------------+---------------+-------------+---------+----------------------------------+--------+----------------------------------+--------------------------------------+-----------+
+
+
+      [Database Table] POSTGRES TABLE: MODELS
+      +--------------------------------------+------+-------------+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+---------------+----------------+---------------+--------------------------------------+--------------------+-------------------+--------+------------+------------+----------------------------------+
+      | id                                   | name | description | source_key                           | source_sha256                        | compiled_key                         | compiled_sha256                      | hardware_type | compile_status | compile_error | dataset_id                           | dataset_version_id | base_architecture | epochs | input_size | batch_size | created_at                       |
+      +--------------------------------------+------+-------------+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+---------------+----------------+---------------+--------------------------------------+--------------------+-------------------+--------+------------+------------+----------------------------------+
+      | c9e2eb73-ac94-43e3-8637-8892025557f6 | F    |             | b70d9406-a9ab-410b-8dbd-a977cb379... | fa5f8be3b19970d1ce68cde2c515d1d39... | c9e2eb73-ac94-43e3-8637-889202555... | 7a284935a1ad113d4e3aefc81d16317a2... | hailo8l       | ready          |               | 78d69a8e-b6a8-4f16-805f-0301303b439e |                    | yolov8n.pt        | 50     | 640x640    | 16         | 2026-07-08T18:39:46.558380+00:00 |
+      | b674656c-1c82-4255-b139-6cf2d105ed5e | D    |             | 647da9dc-000f-46b2-a894-3a2720731... | d22a6efa920747f5548101da026adf1a2... | b674656c-1c82-4255-b139-6cf2d105e... | ca859d6490150d3607da0233b0d0f80c1... | hailo8l       | ready          |               | 4e90fcb6-997a-4055-be5f-01a03d27fa71 |                    | yolov8n.pt        | 50     | 640x640    | 16         | 2026-07-08T18:40:08.562396+00:00 |
+      +--------------------------------------+------+-------------+--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+---------------+----------------+---------------+--------------------------------------+--------------------+-------------------+--------+------------+------------+----------------------------------+
+
+
+      [Database Table] POSTGRES TABLE: MODEL_COMPILATIONS
+      +--------------------------------------+--------------------------------------+---------------+--------------------------------------+--------------------------------------+----------------+---------------+----------------------------------+
+      | id                                   | model_id                             | hardware_type | compiled_key                         | compiled_sha256                      | compile_status | compile_error | created_at                       |
+      +--------------------------------------+--------------------------------------+---------------+--------------------------------------+--------------------------------------+----------------+---------------+----------------------------------+
+      | 5aaae748-1a7d-4650-a72e-8ee5ad30c8e6 | b674656c-1c82-4255-b139-6cf2d105ed5e | rpi           | b674656c-1c82-4255-b139-6cf2d105e... | 39d29cd67633cd301390649b9582d1fb7... | ready          |               | 2026-07-08T18:45:58.199911+00:00 |
+      | 307c55c2-ed93-4484-ace8-3ef2f144c327 | c9e2eb73-ac94-43e3-8637-8892025557f6 | rpi           | c9e2eb73-ac94-43e3-8637-889202555... | 701173fccf6b296d4f1f8e02d6b2c62dc... | ready          |               | 2026-07-08T18:49:57.050949+00:00 |
+      | 85072def-8866-48d5-acd6-888af6be94aa | c9e2eb73-ac94-43e3-8637-8892025557f6 | rpi_ai_cam    | c9e2eb73-ac94-43e3-8637-889202555... | 5d32c17dc6090cf1ab102072d0c15ac09... | ready          |               | 2026-07-08T19:18:51.403694+00:00 |
+      | a4fcb764-cbe7-4b90-969e-d373a9309ce9 | b674656c-1c82-4255-b139-6cf2d105ed5e | rpi_ai_cam    | b674656c-1c82-4255-b139-6cf2d105e... | c75f5079351f4abc04a4573f043baac45... | ready          |               | 2026-07-08T19:47:41.139867+00:00 |
+      | 2b775f10-8877-43df-a9b6-ec536e92d4af | c9e2eb73-ac94-43e3-8637-8892025557f6 | hailo8        | c9e2eb73-ac94-43e3-8637-889202555... | 25a363aa2afa47fb8d74813d61c665aac... | ready          |               | 2026-07-08T20:19:08.149848+00:00 |
+      | ca56f56e-0d1a-459a-9381-a4aecc74f940 | b674656c-1c82-4255-b139-6cf2d105ed5e | hailo8        | b674656c-1c82-4255-b139-6cf2d105e... | beed4b76edb7d09e2b4a264905d51f8ce... | ready          |               | 2026-07-08T20:32:46.508059+00:00 |
+      | a081c4a9-4ba2-428b-953c-58479f394d4e | c9e2eb73-ac94-43e3-8637-8892025557f6 | hailo8l       | c9e2eb73-ac94-43e3-8637-889202555... | 7a284935a1ad113d4e3aefc81d16317a2... | ready          |               | 2026-07-08T20:52:46.143756+00:00 |
+      | 758a5fc4-717c-4f1e-a6e8-5b82b901c16f | b674656c-1c82-4255-b139-6cf2d105ed5e | hailo8l       | b674656c-1c82-4255-b139-6cf2d105e... | ca859d6490150d3607da0233b0d0f80c1... | ready          |               | 2026-07-08T21:11:13.099352+00:00 |
+      +--------------------------------------+--------------------------------------+---------------+--------------------------------------+--------------------------------------+----------------+---------------+----------------------------------+
+
+
+      [Database Table] POSTGRES TABLE: SCRIPTS
+      +--------------------------------------+-----------------------------+--------------------------------------+--------------------------------------+--------------------------------------+----------+----------------------------------+
+      | id                                   | name                        | description                          | script_key                           | script_sha256                        | language | created_at                       |
+      +--------------------------------------+-----------------------------+--------------------------------------+--------------------------------------+--------------------------------------+----------+----------------------------------+
+      | 0a62de89-9d70-4070-9a3c-ba29fd3e3a91 | F                           |                                      | 9a38b3c8-2e5d-4592-868f-932cb9ded... | caf2f9664ef90cbcdab9303edc4142f70... | python   | 2026-07-08T18:40:18.572944+00:00 |
+      | 124aeb94-d952-4bd3-b4d3-703e433462dc | D                           |                                      | b6853d67-9d05-4fa2-bf8c-497737836... | 4e12eb1863575e0b285069cc4b66f4169... | python   | 2026-07-08T18:40:25.271671+00:00 |
+      | c83adb21-439d-4d03-b4cc-a67eb034165f | Live_camera_infer           | Script uploaded during automated ... | c17122f3-33f3-458c-b9ca-94e404d1c... | 4e12eb1863575e0b285069cc4b66f4169... | python   | 2026-07-09T08:54:52.138263+00:00 |
+      | 5a5dc5f2-fa54-42ae-a37b-83b017fc2765 | Live_child_object_detection | Script uploaded during automated ... | de2abf2f-ee47-4207-a56f-21d47e3f1... | caf2f9664ef90cbcdab9303edc4142f70... | python   | 2026-07-09T08:54:52.182034+00:00 |
+      | 5af60aef-f46a-4ac1-835e-e00a11ab64b4 | Live_camera_infer           | Script uploaded during automated ... | 7c845a6c-25b0-434e-ae8c-d6f9fb03e... | 4e12eb1863575e0b285069cc4b66f4169... | python   | 2026-07-09T12:25:18.361521+00:00 |
+      | b72b2a17-ccae-4cec-aab2-34dc9b766238 | Live_child_object_detection | Script uploaded during automated ... | 6f9e02fd-76a2-4643-bb29-6bf5a0be4... | caf2f9664ef90cbcdab9303edc4142f70... | python   | 2026-07-09T12:25:18.428739+00:00 |
+      | c4b15265-81ae-46c8-9623-6f0d868a15eb | Live_camera_infer           | Script uploaded during automated ... | be1c82a4-17e6-4b14-b390-15ef26606... | 4e12eb1863575e0b285069cc4b66f4169... | python   | 2026-07-09T12:44:31.338107+00:00 |
+      | b6386d69-f518-4387-b1e5-533899bd5cc9 | Live_child_object_detection | Script uploaded during automated ... | 6d77789f-5419-431f-896d-2c33e36b7... | caf2f9664ef90cbcdab9303edc4142f70... | python   | 2026-07-09T12:44:31.415397+00:00 |
+      +--------------------------------------+-----------------------------+--------------------------------------+--------------------------------------+--------------------------------------+----------+----------------------------------+
+
+
+      [Database Table] POSTGRES TABLE: DEPLOYMENTS
+      +--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+-------+---------+----------------------------------+----------------------------------+-----------+----------------------------------+
+      | id                                   | device_id                            | model_id                             | script_id                            | name  | status  | sent_at                          | running_at                       | error_msg | created_at                       |
+      +--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+-------+---------+----------------------------------+----------------------------------+-----------+----------------------------------+
+      | 970182d0-9211-4d60-b193-415cc1b2d2ff | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | c9e2eb73-ac94-43e3-8637-8892025557f6 | 0a62de89-9d70-4070-9a3c-ba29fd3e3a91 | F     | stopped | 2026-07-08T18:50:37.109111+00:00 | 2026-07-08T18:50:38.723841+00:00 |           | 2026-07-08T18:49:56.855286+00:00 |
+      | 5b12561e-c746-419c-8ac2-83e73bf5b630 | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D     | running | 2026-07-08T19:04:33.182311+00:00 | 2026-07-08T19:04:35.847952+00:00 |           | 2026-07-08T19:04:33.161185+00:00 |
+      | 05a1f8f2-586a-4465-963f-a3fb1f5e7e4e | 352c0572-c8c9-4678-9181-1c995033f2d3 | c9e2eb73-ac94-43e3-8637-8892025557f6 | 0a62de89-9d70-4070-9a3c-ba29fd3e3a91 | F     | stopped | 2026-07-08T19:35:12.676696+00:00 | 2026-07-08T19:35:13.659246+00:00 |           | 2026-07-08T19:18:51.289688+00:00 |
+      | df5f6e3a-b38a-4009-94e6-312ceb389db6 | 352c0572-c8c9-4678-9181-1c995033f2d3 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D     | running | 2026-07-08T20:04:02.676963+00:00 | 2026-07-08T20:04:04.453550+00:00 |           | 2026-07-08T19:47:40.999517+00:00 |
+      | b3c9e1bd-3e48-4aeb-a3e3-6f707752a251 | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | c9e2eb73-ac94-43e3-8637-8892025557f6 | 0a62de89-9d70-4070-9a3c-ba29fd3e3a91 | F     | stopped | 2026-07-08T20:21:58.502627+00:00 | 2026-07-08T20:21:59.111513+00:00 |           | 2026-07-08T20:19:07.949040+00:00 |
+      | 726ff968-b4d9-4f41-b307-54a4ce5cb701 | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D     | running | 2026-07-08T20:35:26.919796+00:00 | 2026-07-08T20:35:28.231850+00:00 |           | 2026-07-08T20:32:46.219097+00:00 |
+      | 2a8515ba-8d2e-4015-90c4-54a131d74dd7 | e09819b7-b7bf-4724-9a21-56811a844308 | c9e2eb73-ac94-43e3-8637-8892025557f6 | 0a62de89-9d70-4070-9a3c-ba29fd3e3a91 | F     | stopped | 2026-07-08T20:59:06.864486+00:00 | 2026-07-08T20:59:08.491726+00:00 |           | 2026-07-08T20:52:45.828106+00:00 |
+      | 7b3aeb66-e4fb-4f1e-9115-3abb6bbe57c8 | e09819b7-b7bf-4724-9a21-56811a844308 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D     | running | 2026-07-08T21:17:43.861693+00:00 | 2026-07-08T21:17:45.021317+00:00 |           | 2026-07-08T21:11:13.017608+00:00 |
+      | c6699dd3-0f41-4df7-941a-d9aad3f67c43 | e09819b7-b7bf-4724-9a21-56811a844308 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D All | sent    | 2026-07-09T12:02:21.724956+00:00 |                                  |           | 2026-07-09T12:02:21.579380+00:00 |
+      | 6c47d2c5-e263-4239-b4c5-5497ddc9e340 | 352c0572-c8c9-4678-9181-1c995033f2d3 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D All | sent    | 2026-07-09T12:02:21.824995+00:00 |                                  |           | 2026-07-09T12:02:21.764646+00:00 |
+      | e1190a70-02e5-4005-8034-76821b1a9936 | c9613ae5-f2b2-43e0-a8bb-1fd52c928116 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D All | sent    | 2026-07-09T12:02:21.886082+00:00 |                                  |           | 2026-07-09T12:02:21.853197+00:00 |
+      | 98591b89-d136-4987-826b-1b91db03abdb | 8c86041c-7e6b-4511-b7e9-e4599dbfeec4 | b674656c-1c82-4255-b139-6cf2d105ed5e | 124aeb94-d952-4bd3-b4d3-703e433462dc | D All | sent    | 2026-07-09T12:02:21.952732+00:00 |                                  |           | 2026-07-09T12:02:21.913638+00:00 |
+      +--------------------------------------+--------------------------------------+--------------------------------------+--------------------------------------+-------+---------+----------------------------------+----------------------------------+-----------+----------------------------------+
+
+
+      [Live Query] PostgreSQL actual registry counts:
+         - Table datasets: 5 records
+         - Table dataset_versions: 3 records
+         - Table devices: 4 records
+         - Table models: 2 records
+         - Table model_compilations: 8 records
+         - Table scripts: 8 records
+         - Table deployments: 12 records
+      -> Saved: test_registry.png
+[8/9] Running Non-Functional Performance Test...
+      [LOG] Balancing performance telemetry datasets to 175 messages per architecture.
+      [Live Query] Successfully updated live resource utilization metrics from MongoDB.
+      -> Saved: test_performance.png
+
+      [Database Table] EDGE AGENT RESOURCE UTILIZATION (NON-FUNCTIONAL)
+      +-----------------+-------------+--------------+--------------+---------+
+      | Hardware Target | Avg CPU (%) | Peak CPU (%) | Avg RAM (MB) | RAM (%) |
+      +-----------------+-------------+--------------+--------------+---------+
+      | RPi5 (CPU)      | 67.9%       | 77.8%        | 1330.8       | 18.0%   |
+      | Hailo-8         | 6.2%        | 30.4%        | 1156.4       | 15.9%   |
+      | Hailo-8L        | 3.5%        | 36.5%        | 588.8        | 8.7%    |
+      | RPi AI Camera   | 4.3%        | 63.6%        | 1157.3       | 15.9%   |
+      +-----------------+-------------+--------------+--------------+---------+
+
+[9/9] Running Non-Functional Reliability Test...
+      [Live Query] Simulating Edge Network Dropout: client is offline.
+         - Offline Ingestion: Packet 1 buffered to SQLite. Count = 1
+         - Offline Ingestion: Packet 2 buffered to SQLite. Count = 2
+         - Offline Ingestion: Packet 3 buffered to SQLite. Count = 3
+         - Offline Ingestion: Packet 4 buffered to SQLite. Count = 4
+         - Offline Ingestion: Packet 5 buffered to SQLite. Count = 5
+      [Live Query] Simulating Edge Network Dropout Recovery. Flushing SQLite buffer...
+         - Recovery Restored: Flushed buffer. Final SQLite Count = 0
+      [Live Query] Simulating MQTT Broker Crash: client is offline.
+         - Offline Ingestion: Packet 1 buffered to SQLite. Count = 1
+         - Offline Ingestion: Packet 2 buffered to SQLite. Count = 2
+         - Offline Ingestion: Packet 3 buffered to SQLite. Count = 3
+         - Offline Ingestion: Packet 4 buffered to SQLite. Count = 4
+         - Offline Ingestion: Packet 5 buffered to SQLite. Count = 5
+      [Live Query] Simulating MQTT Broker Crash Recovery. Flushing SQLite buffer...
+         - Recovery Restored: Flushed buffer. Final SQLite Count = 0
+      [Live Query] Simulating MLOps Queue Worker Restart: worker is offline.
+         - Offline Queuing: Task 1 queued in Redis mock. Queue Size = 1
+         - Offline Queuing: Task 2 queued in Redis mock. Queue Size = 2
+         - Offline Queuing: Task 3 queued in Redis mock. Queue Size = 3
+         - Offline Queuing: Task 4 queued in Redis mock. Queue Size = 4
+         - Offline Queuing: Task 5 queued in Redis mock. Queue Size = 5
+      [Live Query] Simulating Worker Restart Recovery. Processing Redis queue...
+         - Worker Restored: Processed queue. Final Queue Size = 0
+      -> Saved: test_reliability.png
+
+      [Database Table] INFRASTRUCTURE FAULT TOLERANCE AND RELIABILITY (NON-FUNCTIONAL)
+      +----------------------------+-----------------+-----------------------+---------------------+---------------+
+      | Fail Injection Target      | Faults Injected | Successful Recoveries | Data Loss Incidents | Recovery Rate |
+      +----------------------------+-----------------+-----------------------+---------------------+---------------+
+      | Edge Network Dropout       | 5               | 5                     | 0                   | 100%          |
+      | MQTT Broker Crash          | 5               | 5                     | 0                   | 100%          |
+      | MLOps Queue Worker Restart | 5               | 5                     | 0                   | 100%          |
+      +----------------------------+-----------------+-----------------------+---------------------+---------------+
+
+
+Updating ER Diagram via Graphviz...
+============================================================
+ALL VERIFICATION TESTS COMPLETED AND IMAGES SUCCESSFULLY GENERATED
+============================================================

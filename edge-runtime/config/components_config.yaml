@@ -1,0 +1,39 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AURA Edge Runtime — Components Configuration (Raspberry Pi AI Camera)
+# ─────────────────────────────────────────────────────────────────────────────
+# Describes the physical/virtual components attached to this edge device.
+#
+# Each component has:
+#   id       — unique identifier used in telemetry and local_state
+#   type     — device category: camera | sensor | gpio
+#   driver   — backend driver to use (opencv | libcamera | imx500)
+#   enabled  — whether the DeviceManager should activate this component
+#   params   — driver-specific parameters
+
+components:
+
+  # ── Primary camera — Sony IMX500 AI Camera Driver ──────────────────────────
+  # The Raspberry Pi AI Camera uses the native Sony IMX500 driver for frames.
+  - id: camera_0
+    type: camera
+    driver: imx500
+    enabled: true
+    params:
+      resolution: [640, 480]
+      fps: 10
+
+  # ── Environmental sensor — BME280 via I2C ──────────────────────────────────
+  - id: env_sensor_0
+    type: sensor
+    driver: bme280
+    enabled: false
+    params:
+      bus: 1                     # I2C bus number (1 on RPi 3/4/5)
+      address: "0x76"            # 0x76 (SDO→GND) or 0x77 (SDO→VCC)
+      measurements: [temperature, humidity, pressure]
+
+  # ── Simulated GPS sensor ───────────────────────────────────────────────────
+  - id: gps_0
+    type: gps
+    driver: gps_simulated
+    enabled: true

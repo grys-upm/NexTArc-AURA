@@ -1,0 +1,51 @@
+# Git
+.git
+.github
+
+# Python & Environments
+.venv
+.venv_ubuntu
+venv
+env
+ENV
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.eggs/
+
+# IDEs & System files
+.vscode/
+.idea/
+.agents/
+.DS_Store
+Thumbs.db
+*.log
+
+# Node/Frontend
+**/node_modules/
+frontend/.next/
+frontend/out/
+*.tsbuildinfo
+
+# Environments / Configs / Credentials
+.env
+.env.*
+
+# Local Database & Storage Volumes
+postgres-data/
+mongo-data/
+minio-data/
+mosquitto-data/
+redis-data/
+data/
+
+# Documentation, Local Infrastructure & Developer Scripts
+docs/
+infra/
+scripts/
+/tmp/aura-compilation/

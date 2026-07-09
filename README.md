@@ -147,8 +147,9 @@ The agent reads settings from `edge-runtime/config/device_config.yaml`. These ca
 ## 5. Repository Structure
 
 ```
-TFM_MIoT/
+AURA/
 ├── docker-compose.yml              # Server stack orchestration config
+├── data/                           # Local data files (model weights, dataset zips, custom scripts, and configs)
 ├── infra/                          # Infrastructure configurations
 │   ├── mosquitto/mosquitto.conf    # MQTT Broker config
 │   └── postgres/init.sql           # Database schema seed

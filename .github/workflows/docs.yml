@@ -1,0 +1,82 @@
+name: Build and deploy documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "services/**/*.py"
+      - "edge-runtime/**/*.py"
+      - "shared/**/*.py"
+      - "frontend/lib/**"
+      - "frontend/hooks/**"
+      - "frontend/components/**"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+# Allow deploying to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ── Build Sphinx (Python) docs ────────────────────────────────────────────
+  build-sphinx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: docs/requirements.txt
+
+      - name: Install Python doc dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Build Sphinx HTML
+        run: make -C docs/sphinx html
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: Upload Sphinx artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sphinx-html
+          path: docs/sphinx/build/html
+          retention-days: 1
+
+  # ── Assemble and deploy to GitHub Pages ──────────────────────────────────
+  deploy:
+    needs: [build-sphinx]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download Sphinx HTML
+        uses: actions/download-artifact@v4
+        with:
+          name: sphinx-html
+          path: site/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

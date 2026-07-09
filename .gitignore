@@ -1,0 +1,59 @@
+# General & Python
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+.eggs/
+*.egg-info/
+dist/
+build/
+/tmp/aura-compilation/
+
+# Environments
+.venv/
+.venv_ubuntu/
+venv/
+env/
+ENV/
+
+# Local Database & Storage Volumes (Docker bind-mounts)
+postgres-data/
+mongo-data/
+minio-data/
+mosquitto-data/
+redis-data/
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+*.tsbuildinfo
+
+# Training & Data
+runs/
+run/
+*.zip
+data/train/
+data/hw_arch/
+
+# Local configuration overrides
+docker-compose.override.yml
+.env.*
+!.env.example
+
+# IDEs & System files
+.vscode/
+.idea/
+.agents/
+.DS_Store
+Thumbs.db
+*.log
+
+# Sphinx build artifacts (generated at build time, never committed)
+docs/sphinx/_autosrc/
+docs/sphinx/build/

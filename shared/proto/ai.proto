@@ -1,0 +1,143 @@
+syntax = "proto3";
+package aura.ai.v1;
+
+service AIService {
+  rpc UploadModel(UploadModelRequest) returns (ModelResponse);
+  rpc GetModel(GetModelRequest) returns (ModelResponse);
+  rpc ListModels(ListModelsRequest) returns (ListModelsResponse);
+  rpc DeleteModel(DeleteModelRequest) returns (DeleteModelResponse);
+  rpc UpdateModelCompiled(UpdateModelCompiledRequest) returns (ModelResponse);
+  rpc UploadDataset(UploadDatasetRequest) returns (DatasetResponse);
+  rpc GetDataset(GetDatasetRequest) returns (DatasetResponse);
+  rpc ListDatasets(ListDatasetsRequest) returns (ListDatasetsResponse);
+  rpc DeleteDataset(DeleteDatasetRequest) returns (DeleteDatasetResponse);
+  rpc SetDatasetFile(SetDatasetFileRequest) returns (DatasetResponse);
+  rpc AssociateModelDataset(AssociateModelDatasetRequest) returns (ModelResponse);
+  rpc UpdateModel(UpdateModelRequest) returns (ModelResponse);
+  rpc UpdateDataset(UpdateDatasetRequest) returns (DatasetResponse);
+}
+
+message UpdateModelRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 epochs = 4;
+  string input_size = 5;
+  int32 batch_size = 6;
+  string base_architecture = 7;
+}
+
+message UpdateDatasetRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message UploadModelRequest {
+  string name = 1;
+  string description = 2;
+  string source_key = 3;
+  string source_sha256 = 4;
+  string dataset_id = 5;
+  string base_architecture = 6;
+  int32 epochs = 7;
+  string input_size = 8;
+  int32 batch_size = 9;
+  string dataset_version_id = 10;
+}
+message GetModelRequest    { string id = 1; }
+message ListModelsRequest  {}
+message DeleteModelRequest { string id = 1; }
+message DeleteModelResponse { bool success = 1; }
+message UpdateModelCompiledRequest {
+  string id = 1;
+  string compiled_key = 2;
+  string compiled_sha256 = 3;
+  string hardware_type = 4;
+  string compile_status = 5;
+  string compile_error = 6;
+  string source_key = 7;
+  string source_sha256 = 8;
+}
+message ModelCompilationResponse {
+  string id = 1;
+  string model_id = 2;
+  string hardware_type = 3;
+  string compiled_key = 4;
+  string compiled_sha256 = 5;
+  string compile_status = 6;
+  string compile_error = 7;
+  string created_at = 8;
+}
+message ModelResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string source_key = 4;
+  string source_sha256 = 5;
+  string compiled_key = 6;
+  string compiled_sha256 = 7;
+  string hardware_type = 8;
+  string compile_status = 9;
+  string compile_error = 10;
+  string created_at = 11;
+  string dataset_id = 12;
+  string base_architecture = 14;
+  int32 epochs = 15;
+  string input_size = 16;
+  int32 batch_size = 17;
+  string dataset_version_id = 18;
+  repeated ModelCompilationResponse compilations = 19;
+}
+message ListModelsResponse { repeated ModelResponse models = 1; }
+
+message UploadDatasetRequest {
+  string name = 1;
+  string description = 2;
+}
+message GetDatasetRequest { string id = 1; }
+message ListDatasetsRequest {}
+message DeleteDatasetRequest { string id = 1; }
+message DeleteDatasetResponse { bool success = 1; }
+
+message DatasetVersionResponse {
+  string id = 1;
+  string dataset_id = 2;
+  string version = 3;
+  string description = 4;
+  string object_key = 5;
+  string sha256 = 6;
+  int64 size_bytes = 7;
+  string metadata = 8;
+  string created_at = 9;
+}
+
+message DatasetResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string created_at = 4;
+  string object_key = 5;
+  string sha256 = 6;
+  int64 size_bytes = 7;
+  string metadata = 8;
+  repeated DatasetVersionResponse versions = 9;
+}
+message ListDatasetsResponse { repeated DatasetResponse datasets = 1; }
+
+message SetDatasetFileRequest {
+  string dataset_id = 1;
+  string object_key = 2;
+  string sha256 = 3;
+  int64 size_bytes = 4;
+  string metadata = 5;
+  string version = 6;
+  string description = 7;
+}
+
+message AssociateModelDatasetRequest {
+  string model_id = 1;
+  string dataset_id = 2;
+  string dataset_version_id = 3;
+}
+

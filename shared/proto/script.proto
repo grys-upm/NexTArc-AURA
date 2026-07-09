@@ -1,0 +1,31 @@
+syntax = "proto3";
+package aura.script.v1;
+
+service ScriptService {
+  rpc UploadScript(UploadScriptRequest) returns (ScriptResponse);
+  rpc GetScript(GetScriptRequest) returns (ScriptResponse);
+  rpc ListScripts(ListScriptsRequest) returns (ListScriptsResponse);
+  rpc DeleteScript(DeleteScriptRequest) returns (DeleteScriptResponse);
+}
+
+message UploadScriptRequest {
+  string name = 1;
+  string description = 2;
+  string language = 3;
+  string script_key = 4;
+  string script_sha256 = 5;
+}
+message GetScriptRequest    { string id = 1; }
+message ListScriptsRequest  {}
+message DeleteScriptRequest { string id = 1; }
+message DeleteScriptResponse { bool success = 1; }
+message ScriptResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string language = 4;
+  string script_key = 5;
+  string script_sha256 = 6;
+  string created_at = 7;
+}
+message ListScriptsResponse { repeated ScriptResponse scripts = 1; }

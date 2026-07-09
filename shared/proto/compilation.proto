@@ -1,0 +1,73 @@
+syntax = "proto3";
+package aura.compilation.v1;
+
+service CompilationService {
+  rpc CompileModel(CompileModelRequest) returns (CompileModelResponse);
+  rpc GetCompilationStatus(GetCompilationStatusRequest) returns (CompileModelResponse);
+  rpc TrainModel(TrainModelRequest) returns (TrainModelResponse);
+  rpc GetSupportedHardware(GetSupportedHardwareRequest) returns (GetSupportedHardwareResponse);
+  rpc GetSupportedSensors(GetSupportedSensorsRequest) returns (GetSupportedSensorsResponse);
+  rpc GetSupportedActuators(GetSupportedActuatorsRequest) returns (GetSupportedActuatorsResponse);
+  rpc GetSupportedOthers(GetSupportedOthersRequest) returns (GetSupportedOthersResponse);
+}
+
+message CompileModelRequest {
+  string model_id = 1;
+  string source_key = 2;
+  string hardware_type = 3;
+  int32 num_classes = 4;
+  repeated string class_names = 5;
+  string dataset_id = 6;
+  string dataset_key = 7;
+  string base_architecture = 8;
+  string input_size = 9;
+}
+message GetCompilationStatusRequest { string model_id = 1; }
+message CompileModelResponse {
+  string model_id = 1;
+  string status = 2;
+  string compiled_key = 3;
+  string compiled_sha256 = 4;
+  string error = 5;
+}
+
+message TrainModelRequest {
+  string model_id = 1;
+  string name = 2;
+  string dataset_id = 3;
+  string dataset_key = 4;
+  string base_architecture = 5;
+  int32 epochs = 6;
+  string input_size = 7;
+  float gpu_percent = 8;
+  string device = 9;
+}
+
+message TrainModelResponse {
+  string model_id = 1;
+  string status = 2;
+}
+
+message GetSupportedHardwareRequest {}
+message GetSupportedHardwareResponse {
+  repeated string hardware_types = 1;
+  map<string, string> labels = 2;
+}
+
+message GetSupportedSensorsRequest {}
+message GetSupportedSensorsResponse {
+  repeated string sensors = 1;
+  map<string, string> labels = 2;
+}
+
+message GetSupportedActuatorsRequest {}
+message GetSupportedActuatorsResponse {
+  repeated string actuators = 1;
+  map<string, string> labels = 2;
+}
+
+message GetSupportedOthersRequest {}
+message GetSupportedOthersResponse {
+  repeated string others = 1;
+  map<string, string> labels = 2;
+}

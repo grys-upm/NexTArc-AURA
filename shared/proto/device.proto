@@ -1,0 +1,46 @@
+syntax = "proto3";
+package aura.device.v1;
+
+service DeviceService {
+  rpc CreateDevice(CreateDeviceRequest) returns (DeviceResponse);
+  rpc GetDevice(GetDeviceRequest) returns (DeviceResponse);
+  rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse);
+  rpc DeleteDevice(DeleteDeviceRequest) returns (DeleteDeviceResponse);
+  rpc UpdateDeviceStatus(UpdateDeviceStatusRequest) returns (DeviceResponse);
+  rpc UpdateDevice(UpdateDeviceRequest) returns (DeviceResponse);
+}
+
+message CreateDeviceRequest {
+  string name = 1;
+  string hardware_type = 2;
+  string description = 3;
+  repeated string sensors = 4;
+  repeated string actuators = 5;
+  repeated string others = 6;
+}
+message GetDeviceRequest    { string id = 1; }
+message ListDevicesRequest  {}
+message DeleteDeviceRequest { string id = 1; }
+message DeleteDeviceResponse { bool success = 1; }
+message UpdateDeviceStatusRequest {
+  string id = 1;
+  string status = 2;
+}
+message UpdateDeviceRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+message DeviceResponse {
+  string id = 1;
+  string name = 2;
+  string hardware_type = 3;
+  string description = 4;
+  string status = 5;
+  string last_seen_at = 6;
+  string created_at = 7;
+  repeated string sensors = 8;
+  repeated string actuators = 9;
+  repeated string others = 10;
+}
+message ListDevicesResponse { repeated DeviceResponse devices = 1; }
